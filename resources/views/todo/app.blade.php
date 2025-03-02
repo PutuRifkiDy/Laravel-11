@@ -74,9 +74,9 @@
                         <!-- 03. Searching -->
                         <form id="todo-form" action="{{ route('todo.index') }}" method="get">
                             @csrf
-                            
+
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="search" value=""
+                                <input type="text" class="form-control" name="search" value="{{ request('search') }}"
                                     placeholder="masukkan kata kunci">
                                 <button class="btn btn-secondary" type="submit">
                                     Cari
@@ -134,6 +134,8 @@
                                 <li class="list-group-item">Belum ada data</li>
                             @endforelse
                         </ul>
+
+                        {{ $todos->links() }}
 
 
                     </div>
