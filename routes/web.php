@@ -7,3 +7,6 @@ Route::get('/', function () {
 });
 
 
+Route::get('/todo', function () {
+    return view('todo.app');
+});
