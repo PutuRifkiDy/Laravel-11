@@ -13,7 +13,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        return view('todo.app');
+        $todos = Todo::get();
+        return view('todo.app', compact('todos'));
     }
 
     /**
@@ -47,7 +48,7 @@ class TodoController extends Controller
 
         Todo::create($data);
 
-        return redirect('/todo')->with('success', 'Berhasil simpan data');
+        return redirect()->route('todo.index')->with('success', 'Berhasil simpan data');
     }
 
     /**

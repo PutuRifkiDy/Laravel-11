@@ -38,36 +38,36 @@
         <h1 class="text-center mb-4">To Do List</h1>
         <div class="row justify-content-center">
             <div class="col-md-8">
-             <div class="card mb-3">
-                <div class="card-body">
-                    @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>
+                                            {{ $error }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <!-- 02. Form input data -->
+                        <form id="todo-form" action="{{ route('todo.store') }}" method="post">
+                            @csrf
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="task" id="todo-input"
+                                    placeholder="Tambah task baru" value="{{ old('task') }}"required>
+                                <button class="btn btn-primary" type="submit">
+                                    Simpan
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    @endif
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>
-                                        {{ $error }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    <!-- 02. Form input data -->
-                    <form id="todo-form" action="{{ route('todo.store') }}" method="post">
-                        @csrf
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="task" id="todo-input"
-                                placeholder="Tambah task baru" value="{{ old('task') }}"required>
-                            <button class="btn btn-primary" type="submit">
-                                Simpan
-                            </button>
-                        </div>
-                    </form>
-                  </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -84,40 +84,43 @@
 
                         <ul class="list-group mb-4" id="todo-list">
                             <!-- 04. Display Data -->
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="task-text">Coding</span>
-                                <input type="text" class="form-control edit-input" style="display: none;"
-                                    value="Coding">
-                                <div class="btn-group">
-                                    <button class="btn btn-danger btn-sm delete-btn">✕</button>
-                                    <button class="btn btn-primary btn-sm edit-btn" data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-1" aria-expanded="false">✎</button>
-                                </div>
-                            </li>
-                            <!-- 05. Update Data -->
-                            <li class="list-group-item collapse" id="collapse-1">
-                                <form action="" method="POST">
-                                    <div>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" name="task"
-                                                value="Coding">
-                                            <button class="btn btn-outline-primary" type="button">Update</button>
-                                        </div>
+                            @forelse ($todos as $todo)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="task-text">{{ $todo->task }}</span>
+                                    <input type="text" class="form-control edit-input" style="display: none;"
+                                        value="Coding">
+                                    <div class="btn-group">
+                                        <button class="btn btn-danger btn-sm delete-btn">✕</button>
+                                        <button class="btn btn-primary btn-sm edit-btn" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-{{ $todo->id }}" aria-expanded="false">✎</button>
                                     </div>
-                                    <div class="d-flex">
-                                        <div class="radio px-2">
-                                            <label>
-                                                <input type="radio" value="1" name="is_done"> Selesai
-                                            </label>
+                                </li>
+                                <!-- 05. Update Data -->
+                                <li class="list-group-item collapse" id="collapse-{{ $todo->id }}">
+                                    <form action="" method="POST">
+                                        <div>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" name="task" value="{{ $todo->task }}">
+                                                <button class="btn btn-outline-primary" type="button">Update</button>
+                                            </div>
                                         </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" value="0" name="is_done"> Belum
-                                            </label>
+                                        <div class="d-flex">
+                                            <div class="radio px-2">
+                                                <label>
+                                                    <input type="radio" value="1" name="is_done" {{ $todo->is_done ? 'checked' : '' }}> Selesai
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" value="0" name="is_done" {{ !$todo->is_done ? 'checked' : '' }}> Belum
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </li>
+                                    </form>
+                                </li>
+                            @empty
+                                <li class="list-group-item">Belum ada data</li>
+                            @endforelse
                         </ul>
 
 
@@ -128,8 +131,7 @@
     </div>
 
     <!-- Bootstrap JS Bundle (popper.js included) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
