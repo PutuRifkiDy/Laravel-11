@@ -72,7 +72,9 @@
                 <div class="card">
                     <div class="card-body">
                         <!-- 03. Searching -->
-                        <form id="todo-form" action="" method="get">
+                        <form id="todo-form" action="{{ route('todo.index') }}" method="get">
+                            @csrf
+                            
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" name="search" value=""
                                     placeholder="masukkan kata kunci">
@@ -86,11 +88,15 @@
                             <!-- 04. Display Data -->
                             @forelse ($todos as $todo)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="task-text">{{ $todo->task }}</span>
+                                    <span class="task-text">
+                                        {!! $todo->is_done == 1 ? '<del>' : ' ' !!}
+                                            {{ $todo->task }}
+                                        {!! $todo->is_done == 1 ? '</del>' : ' ' !!}
+                                    </span>
                                     <input type="text" class="form-control edit-input" style="display: none;"
                                         value="Coding">
                                     <div class="btn-group">
-                                        <form action="{{ route('todo.destroy', $todo) }}" method="POST">
+                                        <form action="{{ route('todo.destroy', $todo) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-danger btn-sm delete-btn">✕</button>

@@ -13,7 +13,11 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = Todo::get();
+        if(request('search')) {
+            $todos = Todo::where('task', 'like', '%' .request('search'). '%')->get();
+        } else {
+            $todos = Todo::get();
+        }
         return view('todo.app', compact('todos'));
     }
 
