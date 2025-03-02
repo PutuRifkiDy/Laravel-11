@@ -12,7 +12,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //
+        return view('todo.app');
     }
 
     /**
@@ -28,7 +28,17 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request); // untuk melihat request
+
+        // untuk validasi dan mengubah pesan error menjadi bahasa indonesia
+        $request->validate([
+            'task' => 'required|min:3|max:25',
+
+        ], [
+            'task.required' => 'task harus diisi',
+            'task.min' => 'task minimal 3 karakter',
+            'task.max' => 'task maksimal 25 karakter',
+        ]);
     }
 
     /**
