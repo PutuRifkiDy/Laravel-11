@@ -72,7 +72,23 @@ class TodoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'task' => 'required|min:3|max:25',
+
+        ], [
+            'task.required' => 'task harus diisi',
+            'task.min' => 'task minimal 3 karakter',
+            'task.max' => 'task maksimal 25 karakter',
+        ]);
+
+        $data = [
+            'task' => $request->input('task'),
+            'is_done' => $request->input('is_done'),
+        ];
+
+        Todo::where('id', $id)->update($data);
+
+        return redirect()->route('todo.index')->with('success', 'Berhasil update data');
     }
 
     /**
@@ -80,6 +96,8 @@ class TodoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Todo::where('id', $id)->delete();
+
+        return redirect()->route('todo.index')->with('success', 'Berhasil hapus data');
     }
 }
